@@ -22,9 +22,11 @@
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/index.html \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/js \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/phonegap.js \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/plugins \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/res \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/spec \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/spec.html \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/css/bootstrap.css \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/css/index.css \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/img/logo.png \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/js/app.js \
@@ -34,6 +36,12 @@
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/js/lib/handlebars-v1.1.0.js \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/js/lib/jquery.js \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/js/lib/require.js \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/plugins/org.apache.cordova.camera \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/plugins/org.apache.cordova.camera/www \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/plugins/org.apache.cordova.camera/www/Camera.js \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/plugins/org.apache.cordova.camera/www/CameraConstants.js \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/plugins/org.apache.cordova.camera/www/CameraPopoverHandle.js \
+/Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/plugins/org.apache.cordova.camera/www/CameraPopoverOptions.js \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/res/icon \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/res/screen \
 /Users/csjen/Desktop/RA/GitHub Stuff/chi-bingo/chi-bingo/platforms/android/assets/www/res/icon/android \

@@ -31,6 +31,8 @@
         <script type="text/javascript" src="phonegap.js"></script>
         <script type="text/javascript" src="js/lib/handlebars-v1.1.0.js"></script>
         <script type="text/javascript" src="js/lib/require.js"  data-main="js/index.js"></script>
+        
+
     
         <div class="container">
             <div class="row">
@@ -49,5 +51,19 @@
                 <div id="nine" class="col-xs-4 col-sm-4">9</div>
             </div>
         </div>
+        
+
+<div id="camera">
+    <button id="camera-control">Capture Photo</button>
+    
+    <div style="text-align:center;margin:20px;">
+        <img id="cameraPic" src="" style="width:auto;height:120px;"></img>
+    </div>
+</div>
+
+<img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+<img style="display:none;" id="largeImage" src="" />
+
+
     </body>
 </html>

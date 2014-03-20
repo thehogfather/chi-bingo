@@ -7,9 +7,12 @@
 /*global define, d3, require, $, brackets, window, MouseEvent */
 
 require.config({
-    baseUrl: "./"
+    baseUrl: "./js/"
 });
 
 require(["app"], function (app) {
     app.initialize();
 });
+
+
+

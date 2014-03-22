@@ -1,0 +1,44 @@
+2014-03-20 14:33:08.721 HelloWorld[27344:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-20 14:33:08.796 HelloWorld[27344:70b] Resetting plugins due to page load.
+2014-03-20 14:33:08.836 HelloWorld[27344:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:29:20.607 HelloWorld[31056:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:29:21.006 HelloWorld[31056:70b] Resetting plugins due to page load.
+2014-03-21 14:29:21.131 HelloWorld[31056:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:30:18.798 HelloWorld[31375:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:30:18.844 HelloWorld[31375:70b] Resetting plugins due to page load.
+2014-03-21 14:30:18.882 HelloWorld[31375:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+Terminating in response to SpringBoard's termination.
+2014-03-21 14:30:40.810 HelloWorld[31709:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:30:40.923 HelloWorld[31709:70b] Resetting plugins due to page load.
+2014-03-21 14:30:40.979 HelloWorld[31709:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:30:47.796 HelloWorld[31709:70b] THREAD WARNING: ['Notification'] took '14.165771' ms. Plugin should use a background thread.
+2014-03-21 14:31:24.638 HelloWorld[32023:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:31:24.684 HelloWorld[32023:70b] Resetting plugins due to page load.
+2014-03-21 14:31:24.720 HelloWorld[32023:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:31:39.688 HelloWorld[32023:70b] THREAD WARNING: ['Notification'] took '15.260010' ms. Plugin should use a background thread.
+2014-03-21 14:32:20.629 HelloWorld[32331:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:32:20.677 HelloWorld[32331:70b] Resetting plugins due to page load.
+2014-03-21 14:32:20.715 HelloWorld[32331:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:34:15.567 HelloWorld[32641:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:34:15.641 HelloWorld[32641:70b] Resetting plugins due to page load.
+2014-03-21 14:34:15.678 HelloWorld[32641:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:35:04.565 HelloWorld[32949:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:35:04.640 HelloWorld[32949:70b] Resetting plugins due to page load.
+2014-03-21 14:35:04.677 HelloWorld[32949:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:35:53.959 HelloWorld[33255:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:35:54.035 HelloWorld[33255:70b] Resetting plugins due to page load.
+2014-03-21 14:35:54.072 HelloWorld[33255:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:38:17.286 HelloWorld[33578:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:38:17.360 HelloWorld[33578:70b] Resetting plugins due to page load.
+2014-03-21 14:38:17.398 HelloWorld[33578:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:43:53.389 HelloWorld[33908:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 14:43:53.463 HelloWorld[33908:70b] Resetting plugins due to page load.
+2014-03-21 14:43:53.521 HelloWorld[33908:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 14:43:56.236 HelloWorld[33908:70b] THREAD WARNING: ['Notification'] took '14.713867' ms. Plugin should use a background thread.
+2014-03-21 15:48:07.091 HelloWorld[34428:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 15:48:07.165 HelloWorld[34428:70b] Resetting plugins due to page load.
+2014-03-21 15:48:07.223 HelloWorld[34428:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 15:49:04.503 HelloWorld[34750:70b] Multi-tasking -> Device: YES, App: YES
+2014-03-21 15:49:04.577 HelloWorld[34750:70b] Resetting plugins due to page load.
+2014-03-21 15:49:04.633 HelloWorld[34750:70b] Finished load of: file:///Users/patrick/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/48A79900-F5C2-4D29-AD83-15C105CF923B/HelloWorld.app/www/index.html
+2014-03-21 15:49:22.030 HelloWorld[34750:70b] THREAD WARNING: ['Notification'] took '13.464111' ms. Plugin should use a background thread.

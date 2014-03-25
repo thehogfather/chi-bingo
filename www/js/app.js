@@ -24,15 +24,18 @@ define(function (require, exports, module) {
     function fixTileWidthAndHeight() {
         var width = window.screen.width,
             height = window.screen.height,
-            tw = width / 3,
-            th = height / 3;
-        $("div.tile").css({width: tw + "px", height: th + "px"});
+            tileWidth = width / 3,
+            tileHeight = height / 3,
+            textHeight = 20;
+        $("div.tile").css({width: tileWidth + "px", height: tileHeight + "px"});
     }
     
     function registerTileEvents() {
         $(".row .tile").on("click", function (event) {
             event.stopPropagation();
-            var tileId = event.target.getAttribute("id");
+            var tile = $(event.target);
+            var tileId = tile.attr("id");
+            
             function cameraSuccess(imageData) {
                 $("#" + tileId + " img").attr("src", "data:image/jpeg;base64," + imageData);
                 //save image data in local store
@@ -48,12 +51,13 @@ define(function (require, exports, module) {
         
         $(".tile .name").on("click", function (event) {
             event.stopPropagation();
-            var buttons = ["Okay", "Cancel"];
+            var buttons = ["Okay", "Cancel"],
+                txtName = $(event.target);
             navigator.notification.prompt("Selfie Name", function (results) {
                 if (results.buttonIndex === 1) {
-                    $(event.target).html(results.input1);
+                    txtName.html(results.input1);
                 }
-            }, "Selfie Name", buttons);
+            }, "Selfie Name", buttons, txtName.html());
             
         });
     }

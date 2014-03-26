@@ -5,3 +5,7 @@
 *.class # Java class files
 bin/ # generated files
 gen/
+hooks/
+merges/
+platforms/
+.cordova/

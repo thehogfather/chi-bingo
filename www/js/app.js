@@ -4,47 +4,116 @@
  * @date 3/19/14 14:49:12 PM
  */
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-<<<<<<< HEAD
 /*global define, d3, require, $, brackets, window, MouseEvent */
 define(function(require, exports, module) {
 	"use strict";
+    var d3 = require("lib/d3");
+    var tileHeight, tileWidth;
+    /**
+        Uses native alert to notify and falls back on html alert
+    */
+    function _alert(msg) {
+        if (navigator.notification) {
+            navigator.notification.alert(msg);
+        } else {
+            alert(msg);
+        }
+    }
+    
+    function _prompt(msg, promptCallback, title, defaultText) {
+        title = title || "";// if title is falsy make it an empty string
+        if (navigator.notification) {
+            navigator.notification.prompt(msg, function (result) {
+                if (result.buttonIndex === 1) {//ok was clicked
+                    promptCallback(result.input1);
+                } else {
+                    promptCallback(null);
+                }
+            }, title, ["Ok", "Cancel"], defaultText);
+        } else {
+            var result = prompt(msg, defaultText, title);
+            promptCallback(result);
+        }
+    }
+    
+    // Called when a photo is successfully retrieved
+	function onPhotoDataSuccess(imageData, gridNumber) {
+        //set the image data as background of the div
+        
+        ///TODO need to do something clever? to figure out how much of the picture is shown
+        var imgStr = "data:image/jpeg;base64," + imageData;
+        $("#" + gridNumber + " img").remove();//remove any old img tags
+        //$("#" + gridNumber).append("<img src='" + imgStr + "'/>");
+        d3.select("#" + gridNumber).append("img").attr("src", imgStr)
+            .style("height", tileHeight + "px");
+//		// Get image handle
+//		var smallImage = document.getElementById('smallImage');
+//
+//		// Unhide image elements
+//		smallImage.style.display = 'block';
+//
+//		// Show the captured photo
+//		// The inline CSS rules are used to resize the image
+//		smallImage.src = "data:image/jpeg;base64," + imageData;
+	}
 
-	function capturePhoto() {
+	function capturePhoto(gridNumber) {
 		if (navigator.camera) {
-			// Take picture using device camera and retrieve image as base64-encoded string
-			navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
-				quality: 50
+			//Take picture using device camera and retrieve image as base64-encoded string
+            //creating a closure over the gridNumber variable so that we retain access to it
+			navigator.camera.getPicture(function (imageData) {
+                onPhotoDataSuccess(imageData, gridNumber);   
+            }, onFail, {
+				quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL
 			});
 		} else {
-			alert("whoops!");
+			_alert("whoops!");
 		}
 	}
 
-	function setName(gridNumber) {
-		var currentName = document.getElementById(gridNumber).innerHTML;
-		var newName = prompt("Enter the name of the person you want to meet: ", currentName, "Enter name");
-		if (newName != null) {
-			document.getElementById(gridNumber).innerHTML = newName;
-		}
-	}
+    function setName(gridNumber) {
+        var currentName = $("#" + gridNumber + " .name").html();
+        var msg = "Enter the name of the person you want to meet: ",
+            title = "Bingo";
+        _prompt(msg, function (newName) {
+            if (newName !== null) {
+                $("#" + gridNumber + " .name").html(newName);
+            }
+        }, title, currentName);
+    }
 
-	// Called when a photo is successfully retrieved
-	function onPhotoDataSuccess(imageData) {
-		// Get image handle
-		var smallImage = document.getElementById('smallImage');
-
-		// Unhide image elements
-		smallImage.style.display = 'block';
-
-		// Show the captured photo
-		// The inline CSS rules are used to resize the image
-		smallImage.src = "data:image/jpeg;base64," + imageData;
-	}
-
+	
 	function onFail(message) {
 		alert('Failed because: ' + message);
 	}
 
+    /**
+        Figures out the width and height of the screen and updates the tile sizes
+    */
+    function fixTileWidthAndHeight() {
+        var width = window.screen.width,
+            height = window.screen.height,
+            textHeight = 20;
+        //initialise tile heigh tand width
+        tileWidth = width / 3;
+        tileHeight = height / 3;
+        $("div.tile").css({width: tileWidth + "px", height: tileHeight + "px"});
+    }
+    
+    function registerTileEvents() {
+        //register click handler for tiles
+        $(".tile").on("click", function (event) {
+            event.stopPropagation();
+            var name = $("#" + this.id + " .name").html();
+            if (name.trim().length === 0) {
+                setName(this.id);
+            } else {
+                //get picture
+                capturePhoto(this.id);
+            }
+        });
+    }
 	/*
        
        // Called when a photo is successfully retrieved
@@ -118,16 +187,9 @@ define(function(require, exports, module) {
 		// Application Constructor
 		initialize: function() {
 			this.bindEvents();
-			document.getElementById("camera-control").onclick = function(event) {
-				capturePhoto();
-			};
-
-			for (var i = 1; i < 10; i++) {
-				document.getElementById("box" + i).onclick = function(event) {
-					setName(this.id);
-				};
-			}
-
+            registerTileEvents();
+            //try to set the width and height of the tiles based on device
+            fixTileWidthAndHeight();
 		},
 		// Bind Event Listeners
 		//
@@ -142,7 +204,6 @@ define(function(require, exports, module) {
 		// function, we must explicity call 'app.receivedEvent(...);'
 		onDeviceReady: function() {
 			app.receivedEvent('deviceready');
-
 		},
 		// Update DOM on a Received Event
 		receivedEvent: function(id) {
@@ -151,83 +212,4 @@ define(function(require, exports, module) {
 
 	};
 	module.exports = app;
-=======
-/*global define, d3, require, $, brackets, window, Camera */
-define(function (require, exports, module) {
-    "use strict";
-    
-    var Store = require("./Storage");
-    
-    function show(msg) {
-        if (navigator.notification) {
-            navigator.notification.alert("native" + msg);
-        } else {
-            alert(msg);
-        }
-    }
-    
-    /**
-        Figures out the width and height of the screen and updates the tile sizes
-    */
-    function fixTileWidthAndHeight() {
-        var width = window.screen.width,
-            height = window.screen.height,
-            tileWidth = width / 3,
-            tileHeight = height / 3,
-            textHeight = 20;
-        $("div.tile").css({width: tileWidth + "px", height: tileHeight + "px"});
-    }
-    
-    function registerTileEvents() {
-        $(".row .tile").on("click", function (event) {
-            event.stopPropagation();
-            var tile = $(event.target);
-            var tileId = tile.attr("id");
-            
-            function cameraSuccess(imageData) {
-                $("#" + tileId + " img").attr("src", "data:image/jpeg;base64," + imageData);
-                //save image data in local store
-                Store.set("tile" + tileId, {imageData: imageData});
-            }
-            
-            function cameraError() {
-                //show a default error image on the tile?
-                
-            }
-            navigator.camera.getPicture(cameraSuccess, cameraError, {quality: 50, destinationType: Camera.DestinationType.DATA_URL});
-        });
-        
-        $(".tile .name").on("click", function (event) {
-            event.stopPropagation();
-            var buttons = ["Okay", "Cancel"],
-                txtName = $(event.target);
-            navigator.notification.prompt("Selfie Name", function (results) {
-                if (results.buttonIndex === 1) {
-                    txtName.html(results.input1);
-                }
-            }, "Selfie Name", buttons, txtName.html());
-            
-        });
-    }
-    
-    var app = {
-        // Application Constructor
-        initialize: function () {
-            this.bindEvents();
-        },
-        // Bind Event Listeners
-        //
-        // Bind any events that are required on startup. Common events are:
-        // 'load', 'deviceready', 'offline', and 'online'.
-        bindEvents: function () {
-            document.addEventListener('deviceready', this.onDeviceReady, false);
-        },
-       
-        onDeviceReady: function () {
-            registerTileEvents();
-            fixTileWidthAndHeight();
-        }
-    };
-    module.exports = app;
->>>>>>> FETCH_HEAD
 });

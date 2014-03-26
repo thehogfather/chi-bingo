@@ -46,6 +46,7 @@ define(function(require, exports, module) {
         //$("#" + gridNumber).append("<img src='" + imgStr + "'/>");
         d3.select("#" + gridNumber).append("img").attr("src", imgStr)
             .style("height", tileHeight + "px");
+        
 //		// Get image handle
 //		var smallImage = document.getElementById('smallImage');
 //
@@ -72,13 +73,17 @@ define(function(require, exports, module) {
 		}
 	}
 
-    function setName(gridNumber) {
-        var currentName = $("#" + gridNumber + " .name").html();
+    /**
+        sets the text in the span provided.
+        @param span a jquery selection object  (e.g the result of a $("span.name"))
+    */
+    function setName(span) {
+        var currentName = span.html();
         var msg = "Enter the name of the person you want to meet: ",
             title = "Bingo";
         _prompt(msg, function (newName) {
             if (newName !== null) {
-                $("#" + gridNumber + " .name").html(newName);
+                span.html(newName);
             }
         }, title, currentName);
     }
@@ -105,13 +110,20 @@ define(function(require, exports, module) {
         //register click handler for tiles
         $(".tile").on("click", function (event) {
             event.stopPropagation();
-            var name = $("#" + this.id + " .name").html();
+            //if the name has never been set and user clicks on tile, set the name else take a picture??
+            var span = $("#" + this.id + " .name");
+            var name = span.html();
             if (name.trim().length === 0) {
-                setName(this.id);
+                setName(span);
             } else {
                 //get picture
                 capturePhoto(this.id);
             }
+        });
+        //register click handler for the name 
+        $(".name").on("click", function (event) {
+            event.stopPropagation();//stop event propagation so that parent div does not receive event
+            setName($(this));
         });
     }
 	/*

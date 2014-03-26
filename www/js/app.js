@@ -199,9 +199,7 @@ define(function(require, exports, module) {
 		// Application Constructor
 		initialize: function() {
 			this.bindEvents();
-            registerTileEvents();
-            //try to set the width and height of the tiles based on device
-            fixTileWidthAndHeight();
+            
 		},
 		// Bind Event Listeners
 		//
@@ -216,6 +214,9 @@ define(function(require, exports, module) {
 		// function, we must explicity call 'app.receivedEvent(...);'
 		onDeviceReady: function() {
 			app.receivedEvent('deviceready');
+            registerTileEvents();
+            //try to set the width and height of the tiles based on device
+            fixTileWidthAndHeight();
 		},
 		// Update DOM on a Received Event
 		receivedEvent: function(id) {

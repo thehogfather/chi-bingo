@@ -83,12 +83,85 @@ body {
     transition: 0.6s;
 }
 
+
+
+
+
+/* Wrapper */
+.animate-wrap {
+  position: relative;
+  width: 220px; height: 220px;
+  background-color: #aaa;
+  -webkit-perspective: 1000;
+     -moz-perspective: 1000;
+          perspective: 1000;
+}
+ 
+/* Inputs */
+.animate-wrap input {
+  display: none;
+}
+.animate-wrap [type="radio"]:checked + .animate {
+  -webkit-transform: rotateY(180deg);
+     -moz-transform: rotateY(180deg);
+          transform: rotateY(180deg);
+}
+ 
+/* Image-Wrapper */
+.animate {
+  -webkit-transform-style: preserve-3d;
+     -moz-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-transition: all 0.5s ease-out;
+     -moz-transition: all 0.5s ease-out;
+          transition: all 0.5s ease-out;
+}
+ 
+/* Labels */
+label {
+  position: absolute; top: 0; left: 0; z-index: 2;
+  -webkit-backface-visibility: hidden;
+     -moz-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+ 
+.back {
+  -webkit-transform: rotateY(180deg);
+     -moz-transform: rotateY(180deg);
+          transform: rotateY(180deg);
+}
+.front {
+  z-index: 1;
+}
+
+
+
+
+
+
+
+div.container {
+
+}
+
 div.row .tile {
     position: relative;
     border: 1px solid #eee;
     padding: 0;
     overflow: hidden;
 }
+
+
+div.tile {
+background-image:url('background.png');
+    overflow-x:hidden !important;
+    overflow-y:hidden !important;
+    background-size:contain;
+    background-repeat:no-repeat;
+    background-position:center;
+
+}
+
 
 .tile .name {
     height: 30px;
@@ -97,7 +170,7 @@ div.row .tile {
     position: absolute;
     bottom: 10px;
     text-align: center;
-    background: white;
+    /*background: white;*/
 }
 
 .tile img{

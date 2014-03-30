@@ -126,6 +126,10 @@ define(function(require, exports, module) {
             setName($(this));
         });
     }
+       
+       
+       
+            
 	/*
        
        // Called when a photo is successfully retrieved

@@ -37,6 +37,8 @@
 
     <!-- Customize your app and platform with the preference element. -->
     <!-- <preference name="phonegap-version"      value="3.4.0" /> -->      <!-- all: current version of PhoneGap -->
+    <preference name="iosPersistentFileLocation" value="Library" />
+    <preference name="AndroidPersistentFileLocation" value="Internal" />
     <preference name="orientation"                value="portrait" />        <!-- all: default means both landscape and portrait are enabled -->
     <preference name="target-device"              value="universal" />      <!-- all: possible values handset, tablet, or universal -->
     <preference name="fullscreen"                 value="true" />           <!-- all: hides the status bar at the top of the screen -->
@@ -62,7 +64,8 @@
     <gap:plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
     <gap:plugin name="Capture" value="org.apache.cordova.Capture"/>
 -->
-
+    <gap:plugin name="org.apache.cordova.camera" version="0.2.4"/>
+    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6"/>
 
 
     <!-- Define app icon for each platform. -->

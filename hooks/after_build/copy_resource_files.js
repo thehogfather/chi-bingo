@@ -21,9 +21,22 @@ var android = {
        
 };
 
+console.log("COPYING RESOURCES...");
 Object.keys(android).forEach(function (source) {
     var sourcePath = path.join(root_dir, prefix + "android/" + source),
         destinationPath = path.join(root_dir, "platforms/android/res/" + android[source]);
     var command = "cp " + sourcePath + " " + destinationPath;
     exec(command);
+});
+
+var plugins = [
+    "org.apache.cordova.camera",
+    "org.apache.cordova.dialogs",
+    "https://github.com/devgeeks/Canvas2ImagePlugin.git"
+];
+
+plugins.forEach(function (p) {
+    //remove the plugin 
+    console.log("installing " + p);
+    exec("phonegap plugin add " + p);
 });

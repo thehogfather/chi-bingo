@@ -4,16 +4,16 @@
  * @date 3/21/14 15:05:50 PM
  */
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, d3, require, $, brackets, window, MouseEvent */
+/*global define, d3, require, $, Blob, window, FileReader */
 define(function (require, exports, module) {
     "use strict";
 
     function set(key, val) {
-        localStorage.setItem(key, val);
+        localStorage[key] =  val;
     }
     
     function get(key) {
-        localStorage.getItem(key);
+        return localStorage[key];
     }
     
     function remove(key) {

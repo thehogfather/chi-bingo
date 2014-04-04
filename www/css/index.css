@@ -154,7 +154,7 @@ div.row .tile {
     position: relative;
     padding: 0;
     overflow: hidden;
-    border: 1px solid black;
+    border: 1px solid white;
 }
 div.tile {
     background-image: url('background.png');

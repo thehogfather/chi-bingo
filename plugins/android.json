@@ -6,16 +6,31 @@
     "config_munge": {
         "res/xml/config.xml": {
             "/*": {
+                "<feature name=\"SocialSharing\"><param name=\"android-package\" value=\"nl.xservices.plugins.SocialSharing\" /></feature>": 1,
+                "<feature name=\"Canvas2ImagePlugin\"><param name=\"android-package\" value=\"org.devgeeks.Canvas2ImagePlugin.Canvas2ImagePlugin\" /></feature>": 1,
+                "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>": 1,
                 "<feature name=\"Camera\"><param name=\"android-package\" value=\"org.apache.cordova.camera.CameraLauncher\" /></feature>": 1
             }
         },
         "AndroidManifest.xml": {
-            "/*": {
+            "/manifest": {
                 "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />": 1
+            },
+            "/*": {
+                "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />": 2
             }
         }
     },
     "installed_plugins": {
+        "nl.x-services.plugins.socialsharing": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "org.devgeeks.Canvas2ImagePlugin": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
         "org.apache.cordova.camera": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
         }

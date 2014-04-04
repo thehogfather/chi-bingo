@@ -9,10 +9,10 @@
     <name>CHI Bingo</name>
 
     <description>
-        Hello World sample application that responds to the deviceready event.
+        Play CHI Bingo to compete for the best selfies at CHI
     </description>
 
-    <author href="http://phonegap.com" email="support@phonegap.com">
+    <author href="http://fitlab.eu" email="chi-bingo@fitlab.eu">
         FIT Lab - Swansea University
     </author>
 
@@ -30,10 +30,6 @@
 
         <preference name="permissions"                value="none"/>
     -->
-   
-
-   
-
 
     <!-- Customize your app and platform with the preference element. -->
     <!-- <preference name="phonegap-version"      value="3.4.0" /> -->      <!-- all: current version of PhoneGap -->

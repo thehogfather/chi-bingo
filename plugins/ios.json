@@ -5,6 +5,12 @@
     },
     "config_munge": {
         "framework": {
+            "Social.framework": {
+                "false": 1
+            },
+            "MessageUI.framework": {
+                "false": 1
+            },
             "AudioToolbox.framework": {
                 "true": 1
             },
@@ -26,12 +32,20 @@
         },
         "config.xml": {
             "/*": {
+                "<feature name=\"SocialSharing\"><param name=\"ios-package\" value=\"SocialSharing\" /></feature>": 1,
+                "<feature name=\"Canvas2ImagePlugin\"><param name=\"ios-package\" value=\"Canvas2ImagePlugin\" /><param name=\"onload\" value=\"true\" /></feature>": 1,
                 "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>": 1,
                 "<feature name=\"Camera\"><param name=\"ios-package\" value=\"CDVCamera\" /></feature>": 1
             }
         }
     },
     "installed_plugins": {
+        "nl.x-services.plugins.socialsharing": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "org.devgeeks.Canvas2ImagePlugin": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
         "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
         },

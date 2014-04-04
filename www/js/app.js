@@ -9,7 +9,7 @@ define(function (require, exports, module) {
 	"use strict";
     var d3 = require("lib/d3"),
         db = require("Storage");
-    var tileHeight, tileWidth;
+    var tileHeight, tileWidth, imageWidth = 200, imageHeight = 200, imageQuality = 75;
     
     /**
         Uses native alert to notify and falls back on html alert
@@ -59,25 +59,37 @@ define(function (require, exports, module) {
     function renderImageAndShare(tiles) {
         var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
+       
+        var images = [];
+        
+        function render(images) {
+            //calculate grid dimension to get the right size for rendering final canvas
+            var dimensions = images.map(function (i) {
+                return {width: tileWidth, height: i.height * tileWidth / i.width};
+            });
+            var maxH = d3.max(dimensions, function (i) {return i.height; }),
+                maxW = tileWidth; // (since we are fitting the image to the width of the tile) d3.max(dimensions, function (i) {return i.width; });
+             //set the size of the canvas based on the tile size
+            canvas.width = maxW * 3;
+            canvas.height = maxH * 3;
+            images.forEach(function (img, index) {
+                var x = (index % 3) * maxW,
+                    y = Math.floor(index / 3) * maxH;
+                
+                context.drawImage(img, x, y, dimensions[index].width, dimensions[index].height);
+                if (index === 8) {
+                    share(canvas.toDataURL());
+                }
+            });
+        }
+        
         tiles.forEach(function (imgStr, index) {
             var img = new Image();
             img.onload = function () {
-                var x = (index % 3) * img.width,
-                    y = Math.floor(index / 3) * img.height;
-                //set the size of the canvas based on the actual image size
-                //only need to set it once at the beginning of the array loop
-                if (index === 0) {
-                    canvas.width = img.width * 3;
-                    canvas.height = img.height * 3;
-                }
-                context.drawImage(img, x, y);
-                //when we draw the final tile, save the picture to the photos library or do something else
+                images.push(img);
+            
                 if (index === 8) {
-                    window.canvas2ImagePlugin.saveImageDataToLibrary(function (imgDir) {
-                        share(canvas.toDataURL());
-                    }, function (err) {
-                        _alert(err);
-                    }, canvas);
+                    render(images);
                 }
             };
             img.src = imgStr;
@@ -102,13 +114,27 @@ define(function (require, exports, module) {
         }
     }
     
+    function updateImage(tileId, imageData) {
+        var img = new Image();
+        img.onload = function () {
+            //we can reposition the image if needed to properly centralise the captured image
+            //using background-position-x or -y
+            var xpos = (tileWidth - img.width) / 2, ypos = (tileHeight - img.height) / 2;
+            $("#" + tileId).css({"background-image": "url(" + imageData + ")",
+                                // "background-position-x": xpos + "px",
+                                 "background-size": tileWidth + "px"});
+        };
+        
+        img.src = imageData;
+    }
+    
     // Called when a photo is successfully retrieved
 	function onPhotoDataSuccess(imageData, gridNumber) {
         //set the image data as background of the div
         
         ///TODO need to do something clever? to figure out how much of the picture is shown
         var imgStr = "data:image/jpeg;base64," + imageData;
-        d3.select("#" + gridNumber).style("background-image", "url(" + imgStr + ")");
+        updateImage(gridNumber, imgStr);
         db.set(gridNumber + "image", imgStr);
         updateShareButtonState();
     }
@@ -121,9 +147,9 @@ define(function (require, exports, module) {
                 onPhotoDataSuccess(imageData, gridNumber);
             }, onFail, {
                 correctOrientation: false,
-                targetHeight: 200,
-                targetWidth: 200,
-				quality: 50,
+                targetHeight: imageHeight,
+                targetWidth: imageWidth,
+				quality: imageQuality,
                 destinationType: Camera.DestinationType.DATA_URL
 			});
 		} else {
@@ -198,11 +224,7 @@ define(function (require, exports, module) {
     function updateName(tileId, name) {
         d3.select("#" + tileId + " .name").html(name);
     }
-    
-    function updateImage(tileId, imageData) {
-        d3.select("#" + tileId).style("background-image", "url(" + imageData + ")");
-    }
-    
+        
     function loadSavedImages() {
         d3.selectAll(".tile").each(function () {
             var id = this.id;

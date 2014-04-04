@@ -154,6 +154,7 @@ div.row .tile {
     position: relative;
     padding: 0;
     overflow: hidden;
+    border: 1px solid black;
 }
 div.tile {
     background-image: url('background.png');
@@ -168,9 +169,11 @@ div.tile {
     width: 100%;
     display: block;
     position: absolute;
-    bottom: 10px;
+    bottom: 0px;
     text-align: center;
-    /*background: white;*/
+    background: rgba(0,0,0,0.4);
+    color: #eee;
+    padding: 2px;
 }
 .tile img {
     display: block;
@@ -231,6 +234,8 @@ div#bottomTab.btn-group.btn-group-justified {
     margin: 0;
 }
 
-#bottomTab a {
+#bottomTab div {
     height: 25px;
+    width: 50%;
+    border-bottom: none;
 }

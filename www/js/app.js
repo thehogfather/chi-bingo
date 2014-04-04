@@ -42,39 +42,63 @@ define(function (require, exports, module) {
         }
     }
     
-    function renderImage(tiles) {
-        var canvas = d3.select("canvas").node();
+    function share(imgDir) {
+        function success(msg) {
+            _alert(msg);
+        }
+        
+        function error(err) {
+            _alert("error " + err);
+        }
+        var names = d3.range(1, 10).map(function (d) {
+            return db.get("box" + d + "name");
+        }).join(",");
+        window.plugins.socialsharing.share(names + " are in my #chi2014 Bingo", null, imgDir, null, success, error);
+    }
+    
+    function renderImageAndShare(tiles) {
+        var canvas = document.createElement("canvas");
         var context = canvas.getContext("2d");
         tiles.forEach(function (imgStr, index) {
             var img = new Image();
-            img.addEventListener("load", function () {
+            img.onload = function () {
                 var x = (index % 3) * img.width,
                     y = Math.floor(index / 3) * img.height;
-                context.drawImage(this, x, y);
+                //set the size of the canvas based on the actual image size
+                //only need to set it once at the beginning of the array loop
+                if (index === 0) {
+                    canvas.width = img.width * 3;
+                    canvas.height = img.height * 3;
+                }
+                context.drawImage(img, x, y);
                 //when we draw the final tile, save the picture to the photos library or do something else
                 if (index === 8) {
-                    window.canvas2ImagePlugin.saveImageDataToLibrary(function (sucess) {
-                        _alert(sucess);
+                    window.canvas2ImagePlugin.saveImageDataToLibrary(function (imgDir) {
+                        share(canvas.toDataURL());
                     }, function (err) {
                         _alert(err);
                     }, canvas);
                 }
-            });
+            };
             img.src = imgStr;
         });
     }
     
-    function checkIfBingoCompleted() {
-        var tiles = [];
-        d3.selectAll(".tile").each(function () {
-            var img = d3.select(this).style("background-url");
-            if (img && img.length) {
-                tiles.push(img);
-            }
-        });
-        //if there are nine itmes in the list the bingo is complete for now pop up a dialog to ask to save the image
+    function getCompletedTiles() {
+        //get the tiles saved in the store and filter any non truthy values (ie those that are undefined or null)
+        var tiles = d3.range(1, 10).map(function (d) {
+            var key = "box" + d + "image";
+            return db.get(key);
+        }).filter(function (d) {return d; });
+        
+        return tiles;
+    }
+    
+    function updateShareButtonState() {
+        var tiles = getCompletedTiles();
         if (tiles.length === 9) {
-            renderImage(tiles);
+            //enable share button here ?
+            d3.select("#share").classed("disabled", false);
         }
     }
     
@@ -86,8 +110,8 @@ define(function (require, exports, module) {
         var imgStr = "data:image/jpeg;base64," + imageData;
         d3.select("#" + gridNumber).style("background-image", "url(" + imgStr + ")");
         db.set(gridNumber + "image", imgStr);
-        //checkIfBingoCompleted();
-	}
+        updateShareButtonState();
+    }
 
 	function capturePhoto(gridNumber) {
 		if (navigator.camera) {
@@ -129,11 +153,12 @@ define(function (require, exports, module) {
     */
     function fixTileWidthAndHeight() {
         var width = window.screen.width,
-            height = window.screen.height,
-            textHeight = 20;
+            bottomToolbarHeight = 50,
+            height = window.screen.height - bottomToolbarHeight;
         //initialise tile heigh tand width
         tileWidth = width / 3;
         tileHeight = height / 3;
+        $("body").css({width: width + "px", height: height + "px"});
         $("div.tile").css({width: tileWidth + "px", height: tileHeight + "px"});
     }
     
@@ -155,6 +180,18 @@ define(function (require, exports, module) {
         $(".name").on("click", function (event) {
             event.stopPropagation();//stop event propagation so that parent div does not receive event
             setName(this.parentNode.id);
+        });
+        //register handler for share and about buttons
+        $("#share").on("click", function (event) {
+            event.stopPropagation();
+            var tiles = getCompletedTiles();
+            if (tiles.length === 9) {
+                renderImageAndShare(tiles);
+            }
+        });
+        
+        $("#about").on("click", function (event) {
+            
         });
     }
     
@@ -178,6 +215,7 @@ define(function (require, exports, module) {
                 updateImage(id, image);
             }
         });
+        updateShareButtonState();
     }
 
 	var app = {

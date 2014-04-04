@@ -16,7 +16,8 @@ console.log("CLEANING PLATFORM FOLDERS...");
 var plugins = [
     "org.apache.cordova.camera",
     "org.apache.cordova.dialogs",
-    "https://github.com/devgeeks/Canvas2ImagePlugin.git"
+    "https://github.com/devgeeks/Canvas2ImagePlugin.git",
+    "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git"
 ];
 
 plugins.forEach(function (p) {

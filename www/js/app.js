@@ -4,7 +4,7 @@
  * @date 3/19/14 14:49:12 PM
  */
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, white:true */
-/*global define, d3, require, $, brackets, window, Camera */
+/*global define, d3, require, $, brackets, window, Camera, Promise */
 define(function (require, exports, module) {
 	"use strict";
     var d3 = require("lib/d3"),
@@ -76,59 +76,87 @@ define(function (require, exports, module) {
        
         var images = [];
         
-        function render(images) {
+        function render(tiles) {
             //calculate grid dimension to get the right size for rendering final canvas
-            var dimensions = images.map(function (i) {
-                return {width: tileWidth, height: i.height * tileWidth / i.width};
+            //if there is no image on tile use default tile dimensions
+            var dimensions = tiles.map(function (tile) {
+                return tile.image ?
+                    {width: tileWidth, height: tile.image.height * tileWidth / tile.image.width} :
+                    {width: tileWidth, height: tileHeight};
             });
             var maxH = d3.max(dimensions, function (i) {return i.height; }),
-                maxW = tileWidth; // (since we are fitting the image to the width of the tile) d3.max(dimensions, function (i) {return i.width; });
-             //set the size of the canvas based on the tile size
+                maxW = tileWidth; // (since we are fitting the image to the width of the tile)
+            //set the size of the canvas based on the tile size
             canvas.width = maxW * 3;
             canvas.height = maxH * 3;
-            images.forEach(function (img, index) {
+            tiles.forEach(function (tile, index) {
                 var x = (index % 3) * maxW,
                     y = Math.floor(index / 3) * maxH;
-                
-                context.drawImage(img, x, y, dimensions[index].width, dimensions[index].height);
+                if (tile.image) {
+                    context.drawImage(tile.image, x, y, dimensions[index].width, dimensions[index].height);
+                } else {
+                    //just render a white background with the name?
+                    context.save();
+                    context.textAlign = "center";
+                    context.fill = "white";
+                    context.fillText(tile.name, x + maxW / 2, y + maxH / 2, maxW);
+                    context.restore();
+                }
                 if (index === 8) {
                     share(canvas.toDataURL());
                 }
             });
         }
         
-        tiles.forEach(function (imgStr, index) {
-            var img = new Image();
-            img.onload = function () {
-                images.push(img);
-            
-                if (index === 8) {
-                    render(images);
+        function loadImage(tile) {
+            return new Promise(function (resolve, reject) {
+                var img = new Image();
+                if (tile.image) {
+                    img.onload = function () {
+                        resolve({name: tile.name, image: img});
+                    };
+                    img.onerror = function (event) {
+                        reject(event);
+                    };
+                    img.src = tile.image;
+                } else {
+                    resolve({name: tile.name});
                 }
-            };
-            img.src = imgStr;
+            });
+        }
+        Promise.all(tiles.map(function (tile) {
+            return loadImage(tile);
+        })).then(function (tiles) {
+            render(tiles);
+        }, function (err) {
+            _alert(JSON.stringify(err));
         });
+       
     }
 
-	function getCompletedTiles() {
+    /**
+        Returns a list of all nine tiles on the board
+        returns [{name:string, image:string}]
+    */
+    function getAllTiles() {
 		//get the tiles saved in the store and filter any non truthy values (ie those that are undefined or null)
 		var tiles = d3.range(1, 10).map(function(d) {
-			var key = "box" + d + "image";
-			return db.get(key);
-		}).filter(function(d) {
-			return d;
+			var imageKey = "box" + d + "image", nameKey = "box" + d + "name";
+			return {name: db.get(nameKey), image: db.get(imageKey)};
 		});
 
 		return tiles;
-	}
-
-	function updateShareButtonState() {
-		var tiles = getCompletedTiles();
-		if (tiles.length === 9) {
-			// (not necessary, but left here after removing  disabled)
-			d3.select("#share").classed("disabled", false);
-		}
-	}
+    }
+    
+    /**
+        Returns a list of objects containing the tiles that have pictures in them
+        returns [{name:string, image:string}]
+    */
+    function getCompletedTiles() {
+        return getAllTiles().filter(function (d) {
+            return d.image;
+        });
+    }
 
     function updateImage(tileId, imageData) {
         var img = new Image();
@@ -147,12 +175,9 @@ define(function (require, exports, module) {
 	// Called when a photo is successfully retrieved
 	function onPhotoDataSuccess(imageData, gridNumber) {
         //set the image data as background of the div
-        
-        ///TODO need to do something clever? to figure out how much of the picture is shown
         var imgStr = "data:image/jpeg;base64," + imageData;
         updateImage(gridNumber, imgStr);
         db.set(gridNumber + "image", imgStr);
-        updateShareButtonState();
     }
 
     
@@ -246,7 +271,7 @@ define(function (require, exports, module) {
 			} else {
 				_confirm("Are you sure you don't want to get a full house before sharing?", function(continueSharing) {
 					if (continueSharing) {
-						renderImageAndShare(tiles);
+						renderImageAndShare(getAllTiles());
 					}
 				}, "Share your image", "Share anyway", "Ok, I'll wait");
 			}
@@ -273,7 +298,6 @@ define(function (require, exports, module) {
 				updateImage(id, image);
 			}
 		});
-		updateShareButtonState();
 	}
 
 	var app = {

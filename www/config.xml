@@ -60,8 +60,9 @@
     <gap:plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
     <gap:plugin name="Capture" value="org.apache.cordova.Capture"/>
 -->
-    <gap:plugin name="org.apache.cordova.camera" version="0.2.4"/>
+    <!-- <gap:plugin name="org.apache.cordova.camera" version="0.2.4"/>
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6"/>
+    <gap:plugin name="org.apache.cordova.device" version="0.2.8"/> -->
 
 
     <!-- Define app icon for each platform. -->

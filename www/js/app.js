@@ -24,6 +24,7 @@ define(function (require, exports, module) {
     
 	function onFail(message) {
 		alert('Failed because: ' + message);
+        console.log(message);
 	}
 
 	/** Pop up an input dialog and return the result to promptCallback */
@@ -56,18 +57,18 @@ define(function (require, exports, module) {
 		}
 	}
 
-	function share(imgDir) {
+	function share(imageData) {
 		function success(msg) {
-			_alert(msg);
+			console.log(msg ? "Successfully shared image" : "Some problem sharing. ..");
 		}
 
 		function error(err) {
-			_alert("error " + err);
+			console.log("error " + JSON.stringify(err));
 		}
 		var names = d3.range(1, 10).map(function(d) {
 			return db.get("box" + d + "name");
 		}).join(",");
-		window.plugins.socialsharing.share(names + " are in my #chi2014 Bingo", null, imgDir, null, success, error);
+		window.plugins.socialsharing.share(names + " are in my #chi2014 Bingo", null, imageData, null, success, error);
 	}
 
 	function renderImageAndShare(tiles) {
@@ -183,7 +184,7 @@ define(function (require, exports, module) {
     
 	function onPhotoFail(message) {
 		if (message !== "Camera cancelled.") {
-			alert("Couldn't take a picture because: " + message);
+			_alert("Couldn't take a picture because: " + message);
 		}
 	}
     
@@ -322,7 +323,7 @@ define(function (require, exports, module) {
 			registerTileEvents();
 			//try to set the width and height of the tiles based on device
 			fixTileWidthAndHeight();
-			window.addEventListener("orientationchange", fixTileWidthAndHeight, true);
+			//window.addEventListener("orientationchange", fixTileWidthAndHeight, true);
 		},
 		// Update DOM on a Received Event
 		receivedEvent: function(id) {

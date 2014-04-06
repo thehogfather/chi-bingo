@@ -75,7 +75,7 @@ define(function(require, exports, module) {
 			return db.get("box" + d + "name");
 		}).join(",");
 		// TODO: remove duplicate commas and put "and" before the last one
-		window.plugins.socialsharing.share(names + " are in my #chi2014 Bingo", null, imgDir, null, success, error);
+		window.plugins.socialsharing.share(names + " are in my #chi2014 Bingo", null, imageData, null, success, error);
 	}
 
 	function renderImageAndShare(tiles) {
@@ -275,15 +275,17 @@ define(function(require, exports, module) {
 	function registerTileEvents() {
 		// register click handler for tiles
 		$(".tile").on("click", function(event) {
-			event.stopPropagation();
-			// if the name has never been set and user clicks on tile, set the name else take a picture??
-			var span = $("#" + this.id + " .name");
-			var name = span.html();
-			if (name.trim().length === 0) {
-				setName(this.id);
-			} else {
-				capturePhoto(this.id); // get picture
-			}
+            if (event.target === this) {
+                // if the name has never been set and user clicks on tile, set the name else take a picture??
+                var span = $("#" + this.id + " .name");
+                var name = span.html();
+                if (name.trim().length === 0) {
+                    setName(this.id);
+                } else {
+                    capturePhoto(this.id); // get picture
+                }
+            }
+            
 		});
 
 		// register click handler for the name
@@ -294,7 +296,7 @@ define(function(require, exports, module) {
 
 		// register handler for share and about buttons
 		$("#share").on("click", function(event) {
-			event.stopPropagation();
+			//event.stopPropagation();
 			var tiles = getCompletedTiles();
 			if (tiles.length === 9) {
 				renderImageAndShare(tiles);

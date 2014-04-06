@@ -34,7 +34,8 @@ var plugins = [
 	"org.apache.cordova.dialogs",
 	"org.apache.cordova.device",
 	"https://github.com/devgeeks/Canvas2ImagePlugin.git",
-	"https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git"
+	"https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
+	"https://github.com/cogitor/PhoneGap-OrientationLock.git"
 ];
 
 plugins.forEach(function(p) {

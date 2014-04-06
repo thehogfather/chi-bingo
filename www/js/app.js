@@ -3,8 +3,8 @@
  * @author Patrick Oladimeji
  * @date 3/19/14 14:49:12 PM
  */
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, white:true */
-/*global define, d3, require, $, brackets, window, Camera, Promise, FastClick */
+/* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, white:true */
+/* global define, d3, require, $, brackets, window, Camera, Promise, Touche */
 define(function(require, exports, module) {
 	"use strict";
 	var d3 = require("lib/d3"),
@@ -13,7 +13,9 @@ define(function(require, exports, module) {
 		imageHeight = 200,
 		imageQuality = 80;
 
-	/** Uses native alert to notify and falls back on html alert */
+	/**
+		Uses native alert to notify and falls back on html alert.
+	*/
 	function _alert(msg, title) {
 		if (navigator.notification) {
 			navigator.notification.alert(msg, null, title);
@@ -26,7 +28,9 @@ define(function(require, exports, module) {
 		alert('Failed because: ' + message);
 	}
 
-	/** Pop up an input dialog and return the result to promptCallback */
+	/**
+		Pops up an input dialog and returns the result to promptCallback.
+	*/
 	function _prompt(msg, promptCallback, title, defaultText) {
 		title = title || ""; // if title is false make it an empty string
 		if (navigator.notification) {
@@ -43,7 +47,9 @@ define(function(require, exports, module) {
 		}
 	}
 
-	/** Pop up an input dialog to confirm a message */
+	/**
+		Pops up an input dialog to confirm a message.
+	*/
 	function _confirm(msg, promptCallback, title, okButton, cancelButton) {
 		title = title || ""; // if title is false make it an empty string
 		if (navigator.notification) {
@@ -344,16 +350,12 @@ define(function(require, exports, module) {
 			app.receivedEvent("deviceready");
 			loadSavedImages();
 			registerTileEvents();
-			// try to set the width and height of the tiles based on device
-			fixTileWidthAndHeight();
-			window.addEventListener("orientationchange", fixTileWidthAndHeight, true);
+			fixTileWidthAndHeight(); // try to set the width and height of the tiles based on device
+			window.plugins.orientationLock.lock("portrait"); // Android not supported in phonegap config.xml pref
 			FastClick.attach(document.body);
 		},
 		// Update DOM on a Received Event
-		receivedEvent: function(id) {
-
-		}
-
+		receivedEvent: function(id) {}
 	};
 	module.exports = app;
 });

@@ -92,11 +92,20 @@ canvas {
 .back {
     z-index: 1;
 }
-.flip {
-    -webkit-transform: rotateY(180deg);
-    -webkit-transition: 0.6s;
-    transform: rotateY(180deg);
+
+.rotate-text {
+    -webkit-transform: rotateX(45deg);
+    transform: rotateX(45deg);
     transition: 0.6s;
+    -webkit-transition: 0.6s;
+}
+.flip {
+    -webkit-transform: rotateY(1080deg);
+    -webkit-transition: 1s;
+    transform: rotateY(1080deg);
+    transition: 1s;
+    transition-timing-function:cubic-bezier(0, .94, .13, .99);
+    -webkit-transition-timing-function:cubic-bezier(0, .94, .13, .99);
 }
 /* Wrapper */
 
@@ -238,4 +247,12 @@ div#bottomTab.btn-group.btn-group-justified {
     height: 25px;
     width: 50%;
     border-bottom: none;
+}
+
+#alertContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 204;
+    display: none;
 }

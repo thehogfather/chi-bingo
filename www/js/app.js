@@ -9,8 +9,8 @@ define(function(require, exports, module) {
 	"use strict";
 	var d3 = require("lib/d3"),
 		db = require("Storage");
-	var tileHeight, tileWidth, imageWidth = 200,
-		imageHeight = 200,
+	var tileHeight, tileWidth, imageWidth = 300,
+		imageHeight = 300,
 		imageQuality = 80;
 
 	/**
@@ -71,11 +71,18 @@ define(function(require, exports, module) {
 		function error(err) {
 			_alert(err, "Sharing error");
 		}
-		var names = d3.range(1, 10).map(function(d) {
+		var people = d3.range(1, 10).map(function(d) {
 			return db.get("box" + d + "name");
-		}).join(",");
-		// TODO: remove duplicate commas and put "and" before the last one
-		window.plugins.socialsharing.share(names + " are in my #chi2014 Bingo", null, imageData, null, success, error);
+		}).filter(function (d) {return d; });
+        var names = people.reduce(function (previous, current, index, array) {
+            var sep = ", ";
+            if (index === array.length - 1) {
+                sep = " and ";
+            }
+            return previous ? previous.concat(sep).concat(current) : current;
+        });
+        var verb = people.length > 1 ? " are " : " is ";
+		window.plugins.socialsharing.share(names + verb + "in my #chi2014 Bingo", null, imageData, null, success, error);
 	}
 
 	function renderImageAndShare(tiles) {
@@ -86,34 +93,56 @@ define(function(require, exports, module) {
 
 		function render(tiles) {
 			// calculate grid dimension to get the right size for rendering final canvas
-			// if there is no image on tile use default tile dimensions
-			var dimensions = tiles.map(function(tile) {
+			// if there is no image on tile use zero tile dimensions
+			var dimensions = tiles.map(function(tile, index, tiles) {
 				return tile.image ? {
 					width: tileWidth,
 					height: tile.image.height * tileWidth / tile.image.width
 				} : {
-					width: tileWidth,
-					height: tileHeight
+					width: 0,
+					height: 0
 				};
 			});
-			var maxH = d3.max(dimensions, function(i) {
-				return i.height;
-			}),
-				maxW = tileWidth; // (since we are fitting the image to the width of the tile)
+            //fold the dimensions into rows of three
+            var rows = dimensions.reduce(function (p, c, i, arr) {
+                var r = p[p.length - 1];
+                if (r.length < 3) {
+                    r.push(c);
+                } else {
+                    p.push([c]);
+                }                
+                return p;
+            },[[]]);
+            console.log(JSON.stringify(rows));
+            var rowHeights = rows.map(function (d) {
+                return d3.max(d.map(function (e) { return e.height; })) || tileHeight;
+            });
+            console.log(rowHeights);
+            
+			var	maxW = tileWidth; // (since we are fitting the image to the width of the tile)
 			// set the size of the canvas based on the tile size
 			canvas.width = maxW * 3;
-			canvas.height = maxH * 3;
+			canvas.height = rowHeights[0] + rowHeights[1] + rowHeights[2];
+            context.fillStyle = "white";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            
 			tiles.forEach(function(tile, index) {
-				var x = (index % 3) * maxW,
-					y = Math.floor(index / 3) * maxH;
+				var colIndex = index % 3,
+                    rowIndex = Math.floor(index / 3),
+                    x = colIndex * maxW,
+					y = rowHeights.slice(0, rowIndex).reduce(function (a, b) {
+                        return a + b;  
+                    }, 0);
 				if (tile.image) {
-					context.drawImage(tile.image, x, y, dimensions[index].width, dimensions[index].height);
+					context.drawImage(tile.image, x, y, maxW, rowHeights[rowIndex]);
 				} else {
 					// just render a white background with the name?
 					context.save();
 					context.textAlign = "center";
-					context.fill = "white";
-					context.fillText(tile.name, x + maxW / 2, y + maxH / 2, maxW);
+					context.fillStyle = "white";
+                    context.fillRect(x, y, dimensions[index].width, dimensions[index].height);
+                    context.fillStyle = "black";
+					context.fillText(tile.name || "?", x + maxW / 2, y + rowHeights[rowIndex] / 2, maxW);
 					context.restore();
 				}
 				if (index === 8) {
@@ -197,12 +226,36 @@ define(function(require, exports, module) {
 		img.src = imageData;
 	}
 
+    function showImageAlert(src) {
+        var top = (window.screen.availHeight - tileWidth * 3) / 2;
+        var alertContainer = d3.select("#alertContainer");
+        alertContainer.style("display", "block").style("top", "-" + (tileWidth * 3) + "px").on("click", null);
+        var img = d3.select("#alertContainer img").attr("src", src).style("width", (tileWidth * 3) + "px");
+        //img.classed("rotate-text", true);
+        console.log("top is " + top);
+        alertContainer.on("click", function () {
+            alertContainer.transition().duration(500).style("top", "-1300px")
+                .each("end", function () {
+                    alertContainer.style("display", "none");
+                });
+        });
+        alertContainer.transition().duration(2000).style("top", top + "px").ease("bounce");
+    }
+    
+    function celebrate() {
+        console.log("done - bingo!");
+        showImageAlert("img/bingo.png");
+    }
 	// Called when a photo is successfully retrieved
 	function onPhotoDataSuccess(imageData, gridNumber) {
 		// set the image data as background of the div
 		var imgStr = "data:image/jpeg;base64," + imageData;
 		updateImage(gridNumber, imgStr);
 		db.set(gridNumber + "image", imgStr);
+        //check if bingo is complete, if so celebrate
+        if (getCompletedTiles().length === 9) {
+            celebrate();
+        }
 	}
 
 	function onPhotoFail(message) {
@@ -218,6 +271,7 @@ define(function(require, exports, module) {
 			navigator.camera.getPicture(function(imageData) {
 				onPhotoDataSuccess(imageData, gridNumber);
 			}, onPhotoFail, {
+                cameraDirection: 1,
 				correctOrientation: true,
 				targetHeight: imageHeight,
 				targetWidth: imageWidth,
@@ -252,6 +306,8 @@ define(function(require, exports, module) {
 	function fixTileWidthAndHeight() {
 		var pixelCorrection = 1;
 		if (window.device && window.device.platform === "Android") {
+            console.log(document.documentElement.clientWidth);
+            console.log(JSON.stringify(window.screen));
 			// fix scaling issues - better than target-densitydpi in HTML for Android (also not deprecated)
 			// TODO: improve this - do any other platforms need scaling
 			pixelCorrection = window.devicePixelRatio;

@@ -173,9 +173,7 @@ div.tile {
     background-image: url('background.png');
     overflow-x: hidden !important;
     overflow-y: hidden !important;
-/*
     background-size: contain;
-*/
     background-repeat: no-repeat;
     background-position: center;
 }

@@ -227,7 +227,7 @@ define(function(require, exports, module) {
 	}
 
     function showImageAlert(src) {
-        var top = (window.screen.availHeight - tileWidth * 3) / 2;
+        var top = (document.documentElement.clientHeight - tileWidth * 3) / 2;//using tileWidth because we are scaling the bingo image to the screen width and the image is a square
         var alertContainer = d3.select("#alertContainer");
         alertContainer.style("display", "block").style("top", "-" + (tileWidth * 3) + "px").on("click", null);
         var img = d3.select("#alertContainer img").attr("src", src).style("width", (tileWidth * 3) + "px");
@@ -305,16 +305,18 @@ define(function(require, exports, module) {
     */
 	function fixTileWidthAndHeight() {
 		var pixelCorrection = 1;
+        var scale = 1, cWidth = document.documentElement.clientWidth,
+            cHeight = document.documentElement.clientHeight,
+            sWidth = window.screen.width,
+            sHeight = window.screen.height;
+    
 		if (window.device && window.device.platform === "Android") {
-            console.log(document.documentElement.clientWidth);
-            console.log(JSON.stringify(window.screen));
 			// fix scaling issues - better than target-densitydpi in HTML for Android (also not deprecated)
-			// TODO: improve this - do any other platforms need scaling
-			pixelCorrection = window.devicePixelRatio;
+			scale = sWidth / cWidth;
 		}
-		var width = (window.screen.width / pixelCorrection),
+		var width = cWidth,// (window.screen.width / pixelCorrection),
 			bottomToolbarHeight = 40,
-			height = (window.screen.height / pixelCorrection) - bottomToolbarHeight;
+			height = /*(window.screen.height / pixelCorrection)*/ cHeight - bottomToolbarHeight;
 		// initialise tile height and width
 		tileWidth = width / 3;
 		tileHeight = height / 3;
@@ -367,7 +369,7 @@ define(function(require, exports, module) {
 
 		$("#about").on("click", function(event) {
 			event.stopPropagation();
-			_alert("todo...", "About");
+			_alert("CHI Bingo was Gary Marsden's idea. The app was developed by Jennifer Pearson, Simon Robinson and Patrick Oladimeji.", "About");
 		});
 	}
 

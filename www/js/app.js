@@ -223,7 +223,7 @@ define(function(require, exports, module) {
 				ypos = (tileHeight - img.height) / 2;
             var h = tileHeight * img.width/tileWidth;
             d3.select("#" + tileId).style("background-image", "url(" + imageData + ")")
-                .style("background-size", tileWidth + "px auto");
+                .style("background-size", tileWidth + "px 20px");
 //			$("#" + tileId).css({
 //				"background-image": "url(" + imageData + ")",
 //				// "background-position-x": xpos + "px",

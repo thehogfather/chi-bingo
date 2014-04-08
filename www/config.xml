@@ -32,7 +32,7 @@
     -->
 
     <!-- Customize your app and platform with the preference element. -->
-    <!-- <preference name="phonegap-version"      value="3.4.0" /> -->      <!-- all: current version of PhoneGap -->
+    <preference name="phonegap-version"      value="3.4.0" />      <!-- all: current version of PhoneGap -->
     <preference name="iosPersistentFileLocation" value="Library" />
     <preference name="AndroidPersistentFileLocation" value="Internal" />
     <preference name="orientation"                value="portrait" />        <!-- all: default means both landscape and portrait are enabled -->
@@ -63,9 +63,8 @@
      <gap:plugin name="org.apache.cordova.camera" version="0.2.4"/>
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6"/>
     <gap:plugin name="org.apache.cordova.device" version="0.2.8"/> 
-    <gap:plugin name="https://github.com/devgeeks/Canvas2ImagePlugin.git"/>
-    <gap:plugin name="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git"/>
-	<gap:plugin name="https://github.com/cogitor/PhoneGap-OrientationLock.git"/>
+    <gap:plugin name="Social-Sharing" value="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git"/>
+	<gap:plugin name="OrientationLock" value="https://github.com/cogitor/PhoneGap-OrientationLock.git"/>
 
 
     <!-- Define app icon for each platform. -->

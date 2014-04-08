@@ -225,7 +225,7 @@ define(function(require, exports, module) {
 			$("#" + tileId).css({
 				"background-image": "url(" + imageData + ")",
 				// "background-position-x": xpos + "px",
-				"background-size": tileWidth + "px " + h + "px"
+				"background-size": "cover"// tileWidth + "px " + h + "px"
 			});
 		};
 

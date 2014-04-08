@@ -223,9 +223,9 @@ define(function(require, exports, module) {
 				ypos = (tileHeight - img.height) / 2;
             var h = tileHeight * img.width/tileWidth;
 			$("#" + tileId).css({
-				"background-image": "url(" + imageData + ")",
+				"background-image": "url(" + imageData + ")"
 				// "background-position-x": xpos + "px",
-				"background-size": tileWidth + "px auto"
+				//"background-size": tileWidth + "px auto"
 			});
 		};
 

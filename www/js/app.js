@@ -221,7 +221,7 @@ define(function(require, exports, module) {
 			// using background-position-x or -y
 			var xpos = (tileWidth - img.width) / 2,
 				ypos = (tileHeight - img.height) / 2;
-            var h = tileHeight * tileWidth/img.width;
+            var h = tileHeight * img.width/tileWidth;
 			$("#" + tileId).css({
 				"background-image": "url(" + imageData + ")",
 				// "background-position-x": xpos + "px",

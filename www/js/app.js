@@ -25,7 +25,7 @@ define(function(require, exports, module) {
 	}
 
 	function onFail(message) {
-		alert('Failed because: ' + message);
+		//alert('Failed because: ' + message);
         console.log(message);
 	}
 
@@ -82,7 +82,12 @@ define(function(require, exports, module) {
             return previous ? previous.concat(sep).concat(current) : current;
         });
         var verb = people.length > 1 ? " are " : " is ";
-		window.plugins.socialsharing.share(names + verb + "in my #chi2014 Bingo", null, imageData, null, success, error);
+        var msg = names + verb + "in my #chi2014 Bingo";
+        if (window.device.platform.toLowerCase().indexOf("win") === 0) {
+            window.plugins.socialsharing.share(msg);
+        } else {
+            window.plugins.socialsharing.share(msg, null, imageData, null, success, error);
+        }
 	}
 
 	function renderImageAndShare(tiles) {

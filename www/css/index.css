@@ -260,3 +260,11 @@ div#bottomTab.btn-group.btn-group-justified {
     z-index: 204;
     display: none;
 }
+
+div.highlighter {
+    position: absolute;
+    top: 0;
+    display: none;
+    border: 3px solid red;
+    z-index: 26;
+}

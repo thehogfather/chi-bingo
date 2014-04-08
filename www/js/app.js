@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 	"use strict";
 	var d3 = require("lib/d3"),
 		db = require("Storage");
-	var tileHeight, tileWidth, imageWidth = 300,
+	var tileHeight, tileWidth, imageWidth = 300, bottomToolbarHeight = 40, width, height,
 		imageHeight = 300,
 		imageQuality = 80;
 
@@ -221,48 +221,111 @@ define(function(require, exports, module) {
 			// using background-position-x or -y
 			var xpos = (tileWidth - img.width) / 2,
 				ypos = (tileHeight - img.height) / 2;
-            var h = img.height;// * (tileWidth / img.width);
+            var h = img.height * (tileWidth / img.width);
             d3.select("#" + tileId).style("background-image", "url(" + imageData + ")")
                 .style("background-size", tileWidth + "px " + h + "px");
-//			$("#" + tileId).css({
-//				"background-image": "url(" + imageData + ")",
-//				// "background-position-x": xpos + "px",
-//				"background-size": tileWidth + "px auto"
-//			});
 		};
 
 		img.src = imageData;
 	}
 
-    function showImageAlert(src) {
+    function showImageAlert(src, cb) {
         var top = (document.documentElement.clientHeight - tileWidth * 3) / 2;//using tileWidth because we are scaling the bingo image to the screen width and the image is a square
         var alertContainer = d3.select("#alertContainer");
         alertContainer.style("display", "block").style("top", "-" + (tileWidth * 3) + "px").on("click", null);
         var img = d3.select("#alertContainer img").attr("src", src).style("width", (tileWidth * 3) + "px");
         //img.classed("rotate-text", true);
         console.log("top is " + top);
+        //default behaviour is that image is removed when user clicks on it.
         alertContainer.on("click", function () {
             alertContainer.transition().duration(500).style("top", "-1300px")
                 .each("end", function () {
                     alertContainer.style("display", "none");
                 });
         });
-        alertContainer.transition().duration(2000).style("top", top + "px").ease("bounce");
+        //show the image and invoke the callback after end of transition
+        alertContainer.transition().duration(2000).style("top", top + "px").ease("bounce")
+            .each("end", function () {
+                if (typeof cb === "function") {
+                    cb();
+                }
+            });
     }
     
     function celebrate() {
         console.log("done - bingo!");
         showImageAlert("img/bingo.png");
     }
+    
+    /**
+        checks if a row has been completed
+    */
+    function rowCompleted(gridNumber) {
+        var n = +gridNumber.substr(3);
+        var rows = {"1": "123", "2": "123", "3": "123", "4": "456", "5": "456", "6": "456", "7": "789", "8": "789", "9": "789"};
+        var incomplete = rows[n].split("").some(function (d) {
+            return !db.get("box" + d + "image");
+        });
+        return !incomplete;
+    }
+    /**
+    checks if a column has been completed
+    */
+    function columnCompleted(gridNumber) {
+        var n = +gridNumber.substr(3);
+        var cols = {"1": "147", "2": "258", "3": "369", "4": "147", "5": "258", "6": "369", "7": "147", "8": "258", "9": "369"};
+        var incomplete = cols[n].split("").some(function (d) {
+            return !db.get("box" + d + "image");
+        });
+        return !incomplete;
+    }
+    /**
+     checks if a corner has been completed
+    */
+    function cornerCompleted(gridNumber) {
+        var n = +gridNumber.substr(3);
+        if ([1, 3, 7, 9].indexOf(n) >= 0) {
+            return columnCompleted(gridNumber) && rowCompleted(gridNumber);
+        } else {
+            return false;
+        }
+    }
+    
+    function highlightRow(row) {
+        var y = tileHeight * row, x = 0, w = width, h = tileHeight;
+        d3.select("#rowHighlighter").style("top", y + "px").style("left", x + "px").style("width", w + "px").style("height", h + "px")
+            .style("display", "block");
+    }
+    
+    function highlightColumn(col) {
+        var x = tileWidth * col, y = 0, w = tileWidth, h = height;
+        d3.select("#columnHighlighter").style("top", y + "px").style("left", x + "px").style("width", w + "px").style("height", h + "px")
+            .style("display", "block");
+    }
 	// Called when a photo is successfully retrieved
 	function onPhotoDataSuccess(imageData, gridNumber) {
+        var n = +gridNumber.substr(3) - 1;
 		// set the image data as background of the div
 		var imgStr = "data:image/jpeg;base64," + imageData;
 		updateImage(gridNumber, imgStr);
 		db.set(gridNumber + "image", imgStr);
+        
+        function hideAlert() {
+            d3.selectAll(".highlighter, #alertContainer").style("display", "none");
+        }
         //check if bingo is complete, if so celebrate
         if (getCompletedTiles().length === 9) {
             celebrate();
+        } else if (cornerCompleted(gridNumber)) {
+            highlightColumn(n % 3);
+            highlightRow(Math.floor(n / 3));
+            showImageAlert("img/corners.png", hideAlert);
+        } else if (columnCompleted(gridNumber)) {
+            highlightColumn(n % 3);
+            showImageAlert("img/line.png", hideAlert);
+        } else if (rowCompleted(gridNumber)) {
+            highlightRow(Math.floor(n / 3));
+            showImageAlert("img/line.png", hideAlert);
         }
 	}
 
@@ -318,13 +381,12 @@ define(function(require, exports, module) {
             sWidth = window.screen.width,
             sHeight = window.screen.height;
     
-		var width = cWidth,// (window.screen.width / pixelCorrection),
-			bottomToolbarHeight = 40,
-			height = /*(window.screen.height / pixelCorrection)*/ cHeight - bottomToolbarHeight;
+		width = cWidth;
+        height = cHeight - bottomToolbarHeight;
         
         if (window.device && window.device.platform.toLowerCase().indexOf("win") === 0) {
             width = window.screen.availWidth;
-            height = window.screen.availHeight;
+            height = window.screen.availHeight - bottomToolbarHeight;
         }
 		
 		// initialise tile height and width
@@ -379,7 +441,7 @@ define(function(require, exports, module) {
 
 		$("#about").on("click", function(event) {
 			event.stopPropagation();
-			_alert("CHI Bingo was Gary Marsden's idea. The app was developed by Jennifer Pearson, Simon Robinson and Patrick Oladimeji.", "About");
+			_alert("...", "About");
 		});
 	}
 

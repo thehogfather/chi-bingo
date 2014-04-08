@@ -64,7 +64,7 @@
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6"/>
     <gap:plugin name="org.apache.cordova.device" version="0.2.8"/> 
     <gap:plugin name="Social-Sharing" value="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git"/>
-	<gap:plugin name="OrientationLock" value="https://github.com/cogitor/PhoneGap-OrientationLock.git"/>
+<!--	<gap:plugin name="OrientationLock" value="https://github.com/cogitor/PhoneGap-OrientationLock.git"/>-->
 
 
     <!-- Define app icon for each platform. -->

@@ -221,7 +221,7 @@ define(function(require, exports, module) {
 			// using background-position-x or -y
 			var xpos = (tileWidth - img.width) / 2,
 				ypos = (tileHeight - img.height) / 2;
-            var h = img.height * (tileWidth / img.width);
+            var h = img.height;// * (tileWidth / img.width);
             d3.select("#" + tileId).style("background-image", "url(" + imageData + ")")
                 .style("background-size", tileWidth + "px " + h + "px");
 //			$("#" + tileId).css({

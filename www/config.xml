@@ -65,7 +65,7 @@
     <gap:plugin name="org.apache.cordova.device" version="0.2.8"/> 
     <gap:plugin name="https://github.com/devgeeks/Canvas2ImagePlugin.git"/>
     <gap:plugin name="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git"/>
-	<gap:plugin name="https://github.com/cogitor/PhoneGap-OrientationLock.git""/>
+	<gap:plugin name="https://github.com/cogitor/PhoneGap-OrientationLock.git"/>
 
 
     <!-- Define app icon for each platform. -->

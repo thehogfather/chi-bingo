@@ -84,7 +84,7 @@ define(function(require, exports, module) {
         var verb = people.length > 1 ? " are " : " is ";
         var msg = names + verb + "in my #chi2014 Bingo";
         if (window.device.platform.toLowerCase().indexOf("win") === 0) {
-            window.plugins.socialsharing.share(msg);
+            window.plugins.socialsharing.share(msg, null, null, null);
         } else {
             window.plugins.socialsharing.share(msg, null, imageData, null, success, error);
         }
@@ -221,10 +221,11 @@ define(function(require, exports, module) {
 			// using background-position-x or -y
 			var xpos = (tileWidth - img.width) / 2,
 				ypos = (tileHeight - img.height) / 2;
+            var h = tileHeight * tileWidth/img.width;
 			$("#" + tileId).css({
 				"background-image": "url(" + imageData + ")",
 				// "background-position-x": xpos + "px",
-				"background-size": tileWidth + "px"
+				"background-size": tileWidth + "px " + tileHeight + "px"
 			});
 		};
 
@@ -315,13 +316,15 @@ define(function(require, exports, module) {
             sWidth = window.screen.width,
             sHeight = window.screen.height;
     
-		if (window.device && window.device.platform === "Android") {
-			// fix scaling issues - better than target-densitydpi in HTML for Android (also not deprecated)
-			scale = sWidth / cWidth;
-		}
 		var width = cWidth,// (window.screen.width / pixelCorrection),
 			bottomToolbarHeight = 40,
 			height = /*(window.screen.height / pixelCorrection)*/ cHeight - bottomToolbarHeight;
+        
+        if (window.device && window.device.platform.toLowerCase().indexOf("win") === 0) {
+            width = window.screen.availWidth;
+            height = window.screen.availHeight;
+        }
+		
 		// initialise tile height and width
 		tileWidth = width / 3;
 		tileHeight = height / 3;

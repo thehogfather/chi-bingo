@@ -222,11 +222,13 @@ define(function(require, exports, module) {
 			var xpos = (tileWidth - img.width) / 2,
 				ypos = (tileHeight - img.height) / 2;
             var h = tileHeight * img.width/tileWidth;
-			$("#" + tileId).css({
-				"background-image": "url(" + imageData + ")"
-				// "background-position-x": xpos + "px",
-				//"background-size": tileWidth + "px auto"
-			});
+            d3.select("#" + tileId).style("background-image", "url(" + imageData + ")")
+                .style("background-size", tileWidth + "px auto");
+//			$("#" + tileId).css({
+//				"background-image": "url(" + imageData + ")",
+//				// "background-position-x": xpos + "px",
+//				"background-size": tileWidth + "px auto"
+//			});
 		};
 
 		img.src = imageData;
@@ -266,7 +268,7 @@ define(function(require, exports, module) {
 
 	function onPhotoFail(message) {
 		if (message !== "Camera cancelled." && message != "no image selected") {
-			_alert("Couldn't take a picture because: " + message, "Oops!");
+			//_alert("Couldn't take a picture because: " + message, "Oops!");
 		}
 	}
 

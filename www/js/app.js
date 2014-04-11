@@ -11,13 +11,13 @@ define(function (require, exports, module) {
         db = require("Storage"),
         tileHeight,
         tileWidth,
-        imageWidth = 300,
+        imageWidth = 500,
         bottomToolbarHeight = 40,
         width,
         height,
-        imageHeight = 300,
+        imageHeight = 500,
         imageQuality = 80,
-        aboutText = "CHI Bingo is a fun app that aims to increase social activity at CHI. The aim is simple - before the conference, enter 9 names of people you wish to talk to then the race is on to get 'selfie' photos with each of them before the week ends. Simple! Once you're done you can upload your 9x9 grid to the CHI website to share with others! Researchers at the FIT Lab in Swansea University developed the app, but we can't take all the credit. The late Gary Marsden - a CHI veteran and dear friend - was the inspiration behind the concept. We wish to honour his achievement into the CHI academy this year and welcome his wife Gil who is here in Toronto to accept his award.",
+        aboutText = "CHI Bingo is a fun app that aims to increase social activity at CHI. The aim is simple - before the conference, enter 9 names of people you wish to talk to then the race is on to get 'selfie' photos with each of them before the week ends. Simple! Once you're done you can share your 9x9 grid with others! Researchers at the FIT Lab in Swansea University developed the app, but we can't take all the credit. The late Gary Marsden - a CHI veteran and dear friend - was the inspiration behind the concept. We wish to honour his achievement into the CHI academy this year and welcome his wife Gil who is here in Toronto to accept his award.",
         rowsMap = {
             "1": "123",
             "2": "123",
@@ -41,6 +41,49 @@ define(function (require, exports, module) {
             "9": "369"
         };
 
+    function saveImage(base64) {
+        return new Promise(function (resolve, reject) {
+            var canvas = document.createElement("canvas");
+            var image = document.createElement("img");
+            image.onload = function () {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                var context = canvas.getContext("2d");
+                context.drawImage(image, 0, 0);
+                window.canvas2ImagePlugin.saveImageDataToLibrary(
+                    function (msg) {
+                        resolve(msg);
+                    },
+                    function (err) {
+                        reject(err);
+                    },
+                    canvas
+                );
+            };
+            image.src = base64;
+        });
+    }
+
+    function resizeImage(base64, width) {
+        return new Promise(function (resolve, reject) {
+            var canvas = document.createElement("canvas");
+            var image = document.createElement("img");
+            image.onload = function () {
+                var context = canvas.getContext("2d");
+                var scale = width / image.width;
+                canvas.width = width;
+                canvas.height = image.height * scale;
+                console.log(scale);
+                context.scale(scale, scale);
+                context.drawImage(image, 0, 0);
+                resolve(canvas.toDataURL());
+            };
+            image.onerror = function (err) {
+                reject(err);
+            };
+            image.src = base64;
+        });
+    }
     /**
 		Uses native alert to notify and falls back on html alert.
 	*/
@@ -113,11 +156,7 @@ define(function (require, exports, module) {
         });
         var verb = people.length > 1 ? " are " : " is ";
         var msg = names + verb + "in my #chi2014 Bingo";
-        if (window.device.platform.toLowerCase().indexOf("win") === 0) {
-            window.plugins.socialsharing.share(msg, null, null, null);
-        } else {
-            window.plugins.socialsharing.share(msg, null, imageData, null, success, error);
-        }
+        window.plugins.socialsharing.share(msg, null, imageData, null, success, error);
     }
 
     function renderImageAndShare(tiles) {
@@ -261,7 +300,7 @@ define(function (require, exports, module) {
     }
 
     function addClassToTiles(selector, clazz) {
-        var animationDuration = 500;
+        var animationDuration = 350;
 
         function add(el) {
             return new Promise(function (resolve, reject) {
@@ -328,7 +367,7 @@ define(function (require, exports, module) {
     */
     function rowCompleted(gridNumber) {
         var n = +gridNumber.substr(3);
-        
+
         var incomplete = rowsMap[n].split("").some(function (d) {
             return !db.get("box" + d + "image");
         });
@@ -339,7 +378,7 @@ define(function (require, exports, module) {
     */
     function columnCompleted(gridNumber) {
         var n = +gridNumber.substr(3);
-        
+
         var incomplete = colsMap[n].split("").some(function (d) {
             return !db.get("box" + d + "image");
         });
@@ -350,8 +389,9 @@ define(function (require, exports, module) {
      checks if a corner has been completed
     */
     function cornerCompleted(gridNumber) {
-        var n = +gridNumber.substr(3), corners = [1, 3, 7, 9];
-        var res = corners.indexOf(n) >=0 && corners.every(function (d) {
+        var n = +gridNumber.substr(3),
+            corners = [1, 3, 7, 9];
+        var res = corners.indexOf(n) >= 0 && corners.every(function (d) {
             return db.get("box" + d + "image");
         });
         return res;
@@ -381,47 +421,55 @@ define(function (require, exports, module) {
             tiles, sel;
         // set the image data as background of the div
         var imgStr = "data:image/jpeg;base64," + imageData;
-        updateImage(gridNumber, imgStr);
-        db.set(gridNumber + "image", imgStr);
+        
+        saveImage(imgStr).then(function (msg) {
+                updateImage(gridNumber, imgStr);
+                db.set(gridNumber + "image", imgStr);
 
-        function hideAlert() {
-            d3.selectAll("#alertContainer").style("display", "none");
-        }
-        //check if bingo is complete, if so celebrate
-        if (getCompletedTiles().length === 9) {
-            celebrate();
-        } else if (cornerCompleted(gridNumber)) {
-            tiles = ["#box1", "#box3", "#box7", "#box9"];
-            sel = tiles.join(",");
-            d3.selectAll(sel).classed("unflip", false);
-            addClassToTiles(sel, "flip")
-                .then(function () {
-                    showImageAlert("img/corners.png", hideAlert);
-                    addClassToTiles(tiles.reverse().join(","), "unflip")
+                function hideAlert() {
+                    d3.selectAll("#alertContainer").style("display", "none");
+                }
+                //check if bingo is complete, if so celebrate
+                if (getCompletedTiles().length === 9) {
+                    celebrate();
+                } else if (cornerCompleted(gridNumber)) {
+                    tiles = ["#box1", "#box3", "#box7", "#box9"];
+                    sel = tiles.join(",");
+                    d3.selectAll(sel).classed("unflip", false);
+                    addClassToTiles(sel, "flip")
                         .then(function () {
-                            d3.selectAll(sel).classed("flip", false);
+                            addClassToTiles(tiles.reverse().join(","), "unflip")
+                                .then(function () {
+                                    d3.selectAll(sel).classed("flip", false);
+                                });
+                            showImageAlert("img/corners.png", hideAlert);
                         });
-                });
-        } else if (rowCompleted(gridNumber)) {
-            tiles = rowsMap[n].split("").map(function (d) {
-                return "#box" + d;
-            });
-            sel = tiles.join(",");
-            d3.selectAll(sel).classed("unflip", false);
-            addClassToTiles(tiles.join(","), "flip")
-                .then(function () {
-                    addClassToTiles(tiles.reverse().join(","), "unflip")
+                } else if (rowCompleted(gridNumber)) {
+                    tiles = rowsMap[n].split("").map(function (d) {
+                        return "#box" + d;
+                    });
+                    sel = tiles.join(",");
+                    d3.selectAll(sel).classed("unflip", false);
+                    addClassToTiles(sel, "flip")
                         .then(function () {
-                            d3.selectAll(sel).classed("flip", false);
+                            addClassToTiles(tiles.reverse().join(","), "unflip")
+                                .then(function () {
+                                    d3.selectAll(sel).classed("flip", false);
+                                });
+                            showImageAlert("img/line.png", hideAlert);
                         });
-                    showImageAlert("img/line.png", hideAlert);
-                });
-        }
+                }
+        }, function (err) {
+            console.log(err);
+        });
+
+
+
     }
 
     function onPhotoFail(message) {
         if (message !== "Camera cancelled." && message !== "no image selected") {
-           console.log("Couldn't take a picture because: " + message, "Oops!");
+            console.log("Couldn't take a picture because: " + message, "Oops!");
         }
     }
 
@@ -474,12 +522,6 @@ define(function (require, exports, module) {
 
         width = cWidth;
         height = cHeight - bottomToolbarHeight;
-
-        if (window.device && window.device.platform.toLowerCase().indexOf("win") === 0) {
-            width = window.screen.availWidth;
-            height = window.screen.availHeight - bottomToolbarHeight;
-        }
-
         // initialise tile height and width
         tileWidth = width / 3;
         tileHeight = height / 3;
@@ -565,6 +607,7 @@ define(function (require, exports, module) {
         // 'load', 'deviceready', 'offline', and 'online'.
         bindEvents: function () {
             document.addEventListener("deviceready", this.onDeviceReady, false);
+            document.addEventListener("backbutton", function (e) { e.preventDefault();}, false);
         },
         // deviceready Event Handler
         //

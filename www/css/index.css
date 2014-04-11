@@ -90,11 +90,18 @@ body {
 canvas {
     display: none;
 }
+.front, .back {
+    position: absolute;
+    top: 0;
+}
 .front {
     z-index: 2;
+    background-image: url(background.png);
 }
 .back {
     z-index: 1;
+    background: #999;
+    -webkit-transform: rotateY(-180deg);
 }
 
 .rotate-text {
@@ -104,12 +111,34 @@ canvas {
     -webkit-transition: 0.6s;
 }
 .flip {
-    -webkit-transform: rotateY(1080deg);
-    -webkit-transition: 1s;
-    transform: rotateY(1080deg);
-    transition: 1s;
+    -webkit-transform: rotateY(180deg);
+    -webkit-transition: 0.6s;
+    transform: rotateY(180deg);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: 0.6s;
+    border: 1px solid #eee;
+/*
     transition-timing-function:cubic-bezier(0, .94, .13, .99);
     -webkit-transition-timing-function:cubic-bezier(0, .94, .13, .99);
+*/
+}
+
+.unflip {
+    -webkit-transform: rotateY(0deg);
+    -webkit-transition: 0.6s;
+    transform: rotateY(0deg);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: 0.6s;
+/*
+    transition-timing-function:cubic-bezier(0, .94, .13, .99);
+    -webkit-transition-timing-function:cubic-bezier(0, .94, .13, .99);
+*/
 }
 /* Wrapper */
 
@@ -153,14 +182,7 @@ label {
     -moz-backface-visibility: hidden;
     backface-visibility: hidden;
 }
-.back {
-    -webkit-transform: rotateY(180deg);
-    -moz-transform: rotateY(180deg);
-    transform: rotateY(180deg);
-}
-.front {
-    z-index: 1;
-}
+
 div.container {} 
 
 div.row .tile {
@@ -168,6 +190,7 @@ div.row .tile {
     padding: 0;
     overflow: hidden;
     border: 1px solid white;
+    background-color: white;
 }
 div.tile {
     background-image: url('background.png');
@@ -184,7 +207,6 @@ div.tile {
     position: absolute;
     bottom: 0px;
     text-align: center;
-    background: rgba(0,0,0,0.4);
     color: #eee;
     padding: 2px;
 }
@@ -260,7 +282,9 @@ div#bottomTab.btn-group.btn-group-justified {
     z-index: 204;
     display: none;
 }
-
+.highlightTile {
+    border: 3px solid red;
+}
 div.highlighter {
     position: absolute;
     top: 0;
